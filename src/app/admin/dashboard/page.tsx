@@ -89,7 +89,7 @@ export default function AdminDashboard() {
         rejected: action === "reject" ? s.rejected + 1 : s.rejected,
       }));
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setActionLoading(null);
     }

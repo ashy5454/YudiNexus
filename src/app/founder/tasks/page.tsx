@@ -110,7 +110,7 @@ export default function KanbanBoard() {
         assigneeId: "", priority: "MEDIUM", type: "TASK", dueDate: "",
       });
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setSubmitting(false);
     }
@@ -136,10 +136,10 @@ export default function KanbanBoard() {
         setTasks((prev) => prev.filter((t) => t.id !== taskId));
       } else {
         const data: any = await res.json();
-        alert("Error: " + data.error);
+        window.alert("Error: " + data.error);
       }
     } catch {
-      alert("Failed to delete task");
+      window.alert("Failed to delete task");
     } finally {
       setDeletingTask(null);
     }

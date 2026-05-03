@@ -61,9 +61,9 @@ export default function ManageFounders() {
       if (!res.ok) throw new Error(data.error);
       
       setUsers(users.filter(u => u.id !== userId));
-      alert(action === 'approve' ? "Founder approved successfully! They can now log in." : "Founder rejected.");
+      window.alert(action === 'approve' ? "Founder approved successfully! They can now log in." : "Founder rejected.");
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setActionLoading(null);
     }

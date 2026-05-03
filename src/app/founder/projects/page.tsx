@@ -80,7 +80,7 @@ export default function FounderProjects() {
       setShowModal(false);
       setForm({ name: "", description: "", type: "SOFTWARE", status: "ACTIVE", startDate: "", endDate: "" });
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setSubmitting(false);
     }
@@ -95,10 +95,10 @@ export default function FounderProjects() {
         setProjects((prev) => prev.filter((p) => p.id !== projectId));
       } else {
         const data: any = await res.json();
-        alert("Error: " + data.error);
+        window.alert("Error: " + data.error);
       }
     } catch {
-      alert("Failed to delete project");
+      window.alert("Failed to delete project");
     } finally {
       setDeletingId(null);
     }

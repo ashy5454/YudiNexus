@@ -82,7 +82,7 @@ export default function FounderTeamManagement() {
         setPendingUsers((prev) => prev.filter((u) => u.id !== userId));
       }
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setActionLoading(null);
     }
@@ -100,7 +100,7 @@ export default function FounderTeamManagement() {
 
       setActiveUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (err: any) {
-      alert("Error: " + err.message);
+      window.alert("Error: " + err.message);
     } finally {
       setActionLoading(null);
     }
