@@ -1,0 +1,266 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN  // One master admin (YUDI HQ)
+  FOUNDER      // N founders, each manages their team
+  EMPLOYEE     // N employees per founder/org
+}
+
+enum UserStatus {
+  PENDING             // Registered, OTP not yet verified
+  AWAITING_APPROVAL   // OTP verified, waiting for admin/founder approval
+  ACTIVE              // Fully approved and operational
+  INACTIVE            // Deactivated by admin
+  REJECTED            // Registration rejected
+}
+
+// ─────────────────────────────────────────────────
+// USER
+// ─────────────────────────────────────────────────
+
+model User {
+  id               String     @id @default(uuid())
+  email            String     @unique
+  passwordHash     String?
+  firstName        String
+  lastName         String
+  role             Role       @default(EMPLOYEE)
+  status           UserStatus @default(PENDING)
+  avatarUrl        String?
+  phone            String?
+  designation      String?
+  companyName      String?    // for founders
+  approvedById     String?    // who approved this user
+  approvedAt       DateTime?
+  rejectionReason  String?
+  lastLoginAt      DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Relations
+  otpCodes         OtpCode[]
+  projects         Project[]    @relation("ProjectOwner")
+  tasksAssigned    Task[]       @relation("TaskAssignee")
+  tasksReported    Task[]       @relation("TaskReporter")
+  timeLogs         TimeLog[]
+  pointEvents      PointEvent[]
+  sprintsCreated   Sprint[]
+}
+
+// ─────────────────────────────────────────────────
+// OTP VERIFICATION
+// ─────────────────────────────────────────────────
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String   // 6-digit code
+  purpose   String   // "EMAIL_VERIFY" | "LOGIN_MFA" | "PASSWORD_RESET"
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────────
+// PROJECT
+// ─────────────────────────────────────────────────
+
+enum ProjectType {
+  SOFTWARE
+  MARKETING
+  OPERATIONS
+  DESIGN
+  RESEARCH
+  OTHER
+}
+
+enum ProjectStatus {
+  NOT_STARTED
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  type        ProjectType
+  status      ProjectStatus @default(NOT_STARTED)
+  ownerId     String
+  owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  startDate   DateTime?
+  endDate     DateTime?
+  icon        String?
+  color       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tasks       Task[]
+  sprints     Sprint[]
+}
+
+// ─────────────────────────────────────────────────
+// SPRINT
+// ─────────────────────────────────────────────────
+
+enum SprintStatus {
+  PLANNING
+  ACTIVE
+  CLOSED
+}
+
+model Sprint {
+  id             String       @id @default(uuid())
+  projectId      String
+  project        Project      @relation(fields: [projectId], references: [id])
+  name           String
+  goal           String?
+  status         SprintStatus @default(PLANNING)
+  startDate      DateTime?
+  endDate        DateTime?
+  capacityPoints Int?
+  createdById    String
+  createdBy      User         @relation(fields: [createdById], references: [id])
+  closedAt       DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  tasks          Task[]
+}
+
+// ─────────────────────────────────────────────────
+// TASK
+// ─────────────────────────────────────────────────
+
+enum TaskType {
+  STORY
+  BUG
+  TASK
+  SUBTASK
+  IMPROVEMENT
+  DOCUMENTATION
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  TESTING
+  DONE
+  BLOCKED
+}
+
+enum TaskPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model Task {
+  id             String       @id @default(uuid())
+  taskNumber     String       @unique
+  projectId      String
+  project        Project      @relation(fields: [projectId], references: [id])
+  sprintId       String?
+  sprint         Sprint?      @relation(fields: [sprintId], references: [id])
+  parentTaskId   String?
+  parentTask     Task?        @relation("SubTasks", fields: [parentTaskId], references: [id])
+  subTasks       Task[]       @relation("SubTasks")
+  title          String
+  description    String?
+  type           TaskType     @default(TASK)
+  status         TaskStatus   @default(BACKLOG)
+  priority       TaskPriority @default(MEDIUM)
+  storyPoints    Int?
+  estimatedHours Decimal?
+  loggedHours    Decimal?     @default(0)
+  assigneeId     String?
+  assignee       User?        @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  reporterId     String?
+  reporter       User?        @relation("TaskReporter", fields: [reporterId], references: [id])
+  dueDate        DateTime?
+  completedAt    DateTime?
+  position       Int          @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  timeLogs       TimeLog[]
+}
+
+// ─────────────────────────────────────────────────
+// TIME LOG
+// ─────────────────────────────────────────────────
+
+enum TimeLogStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model TimeLog {
+  id           String        @id @default(uuid())
+  taskId       String
+  task         Task          @relation(fields: [taskId], references: [id])
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  loggedHours  Decimal
+  description  String?
+  logDate      DateTime
+  status       TimeLogStatus @default(PENDING)
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+// ─────────────────────────────────────────────────
+// POINT ECONOMY
+// ─────────────────────────────────────────────────
+
+enum PointEventType {
+  TASK_COMPLETION
+  TIME_LOG
+  BONUS_ON_TIME
+  BONUS_SPRINT_HERO
+  BONUS_ZERO_BLOCKER
+  BONUS_DOCUMENTATION
+  BONUS_STANDUP_STREAK
+  KUDOS_RECEIVED
+  PENALTY_LATE
+  PENALTY_ABANDONED
+  PENALTY_LOG
+  MANUAL_ADJUSTMENT
+}
+
+model PointEvent {
+  id         String         @id @default(uuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id])
+  month      Int
+  year       Int
+  eventType  PointEventType
+  points     Int
+  sourceId   String?
+  note       String?
+  adjustedBy String?
+  createdAt  DateTime       @default(now())
+}
