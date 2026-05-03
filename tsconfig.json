@@ -3,7 +3,9 @@
     "target": "ESNext",
     "module": "CommonJS",
     "lib": [
-      "ESNext"
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
     "moduleResolution": "node",
     "strict": true,
