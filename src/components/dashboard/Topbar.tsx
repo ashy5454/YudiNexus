@@ -62,8 +62,8 @@ export function Topbar({ title, userName, userEmail }: TopbarProps) {
         <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block" />
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div role="button" tabIndex={0} className="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-50 transition-colors group cursor-pointer outline-none">
+          <DropdownMenuTrigger className="outline-none">
+            <div className="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-50 transition-colors group cursor-pointer">
               <div className="w-10 h-10 rounded-xl bg-mesh border border-white/50 flex items-center justify-center text-primary font-bold shadow-sm group-hover:scale-105 transition-transform">
                 {userName.split(' ').map(n => n[0]).join('')}
               </div>
