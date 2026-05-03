@@ -48,7 +48,7 @@ export default function EmployeeRegister() {
           companyName: form.companyName,
         }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setUserId(data.userId);
       setStep("verify");
@@ -69,7 +69,7 @@ export default function EmployeeRegister() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, otp }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setStep("done");
     } catch (err: any) {

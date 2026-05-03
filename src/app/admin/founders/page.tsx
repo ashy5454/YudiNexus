@@ -30,7 +30,7 @@ export default function ManageFounders() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch (err) {}
   }
@@ -38,7 +38,7 @@ export default function ManageFounders() {
   async function fetchUsers() {
     try {
       const res = await fetch("/api/admin/users?status=PENDING,AWAITING_APPROVAL");
-      const data = await res.json();
+      const data: any = await res.json();
       // Only show those who have verified their OTP (AWAITING_APPROVAL)
       setUsers((data.users || []).filter((u: any) => u.status === "AWAITING_APPROVAL"));
 
@@ -57,7 +57,7 @@ export default function ManageFounders() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, action }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       
       setUsers(users.filter(u => u.id !== userId));

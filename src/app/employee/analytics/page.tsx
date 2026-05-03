@@ -34,7 +34,7 @@ export default function EmployeeAnalytics() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -43,7 +43,7 @@ export default function EmployeeAnalytics() {
     setLoading(true);
     try {
       const res = await fetch(`/api/tasks?month=${selectedMonth}&year=${selectedYear}`);
-      const data = await res.json();
+      const data: any = await res.json();
       setTasks(data.tasks || []);
     } catch (err) {
       console.error("Failed to fetch analytics");

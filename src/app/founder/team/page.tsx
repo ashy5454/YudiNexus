@@ -35,7 +35,7 @@ export default function FounderTeamManagement() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -69,7 +69,7 @@ export default function FounderTeamManagement() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, action }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
 
       if (action === "approve") {
@@ -95,7 +95,7 @@ export default function FounderTeamManagement() {
       const res = await fetch(`/api/admin/users?userId=${userId}`, {
         method: "DELETE",
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
 
       setActiveUsers((prev) => prev.filter((u) => u.id !== userId));

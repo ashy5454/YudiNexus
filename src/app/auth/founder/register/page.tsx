@@ -51,7 +51,7 @@ export default function FounderRegister() {
           companyName: form.companyName, designation: form.designation, phone: form.phone,
         }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setUserId(data.userId);
       setStep("verify");
@@ -72,7 +72,7 @@ export default function FounderRegister() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, otp }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setStep("done");
     } catch (err: any) {

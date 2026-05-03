@@ -30,7 +30,7 @@ export default function EmployeeLogin() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const data: any = await res.json();
 
       if (!res.ok) {
         if (data.pending) {

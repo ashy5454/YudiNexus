@@ -50,7 +50,7 @@ export default function FounderProjects() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -58,7 +58,7 @@ export default function FounderProjects() {
   async function fetchProjects() {
     try {
       const res = await fetch("/api/projects");
-      const data = await res.json();
+      const data: any = await res.json();
       setProjects(data.projects || []);
     } catch { console.error("Failed to fetch projects"); }
     finally { setLoading(false); }
@@ -74,7 +74,7 @@ export default function FounderProjects() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setProjects((prev) => [data.project, ...prev]);
       setShowModal(false);
@@ -94,7 +94,7 @@ export default function FounderProjects() {
       if (res.ok) {
         setProjects((prev) => prev.filter((p) => p.id !== projectId));
       } else {
-        const data = await res.json();
+        const data: any = await res.json();
         alert("Error: " + data.error);
       }
     } catch {

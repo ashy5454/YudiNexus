@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, action }),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setPendingFounders((prev) => prev.filter((u) => u.id !== userId));
       setStats((s) => ({

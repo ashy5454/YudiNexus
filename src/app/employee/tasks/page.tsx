@@ -49,7 +49,7 @@ export default function EmployeeTasks() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -57,7 +57,7 @@ export default function EmployeeTasks() {
   async function fetchTasks() {
     try {
       const res = await fetch("/api/tasks");
-      const data = await res.json();
+      const data: any = await res.json();
       setTasks(data.tasks || []);
     } catch {
       console.error("Failed to fetch tasks");

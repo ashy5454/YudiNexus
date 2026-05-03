@@ -34,7 +34,7 @@ export default function FounderAnalytics() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -54,7 +54,7 @@ export default function FounderAnalytics() {
       // Fetch tasks for each project
       for (const project of projects) {
         const res = await fetch(`/api/tasks?projectId=${project.id}&month=${selectedMonth}&year=${selectedYear}`);
-        const data = await res.json();
+        const data: any = await res.json();
         if (data.tasks) {
           allTasks = [...allTasks, ...data.tasks];
         }

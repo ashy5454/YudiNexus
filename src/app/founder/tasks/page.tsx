@@ -58,7 +58,7 @@ export default function KanbanBoard() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -66,7 +66,7 @@ export default function KanbanBoard() {
   async function fetchTasks() {
     try {
       const res = await fetch("/api/tasks");
-      const data = await res.json();
+      const data: any = await res.json();
       setTasks(data.tasks || []);
     } catch { console.error("Failed to fetch tasks"); }
     finally { setLoading(false); }
@@ -75,7 +75,7 @@ export default function KanbanBoard() {
   async function fetchProjects() {
     try {
       const res = await fetch("/api/projects");
-      const data = await res.json();
+      const data: any = await res.json();
       setProjects(data.projects || []);
       if (data.projects?.length > 0) {
         setForm((f) => ({ ...f, projectId: data.projects[0].id }));
@@ -86,7 +86,7 @@ export default function KanbanBoard() {
   async function fetchTeam() {
     try {
       const res = await fetch("/api/admin/users?status=ACTIVE&role=EMPLOYEE");
-      const data = await res.json();
+      const data: any = await res.json();
       setTeamMembers(data.users || []);
     } catch {}
   }
@@ -101,7 +101,7 @@ export default function KanbanBoard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok) throw new Error(data.error);
       setTasks((prev) => [data.task, ...prev]);
       setShowModal(false);
@@ -135,7 +135,7 @@ export default function KanbanBoard() {
       if (res.ok) {
         setTasks((prev) => prev.filter((t) => t.id !== taskId));
       } else {
-        const data = await res.json();
+        const data: any = await res.json();
         alert("Error: " + data.error);
       }
     } catch {

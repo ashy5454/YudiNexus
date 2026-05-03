@@ -27,7 +27,7 @@ export default function EmployeeProjects() {
   async function fetchSession() {
     try {
       const res = await fetch("/api/auth/session");
-      const data = await res.json();
+      const data: any = await res.json();
       setSession(data.user);
     } catch {}
   }
@@ -35,7 +35,7 @@ export default function EmployeeProjects() {
   async function fetchProjects() {
     try {
       const res = await fetch("/api/projects");
-      const data = await res.json();
+      const data: any = await res.json();
       setProjects(data.projects || []);
     } catch { console.error("Failed to fetch projects"); }
     finally { setLoading(false); }
