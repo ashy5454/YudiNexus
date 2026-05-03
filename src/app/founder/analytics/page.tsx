@@ -46,7 +46,7 @@ export default function FounderAnalytics() {
       // Wait, the API GET currently doesn't filter by founder's projects explicitly unless projectId is passed.
       // Let's get the founder's projects first.
       const projRes = await fetch("/api/projects");
-      const projData = await projRes.json();
+      const projData: any = await projRes.json();
       const projects = projData.projects || [];
       
       let allTasks: any[] = [];

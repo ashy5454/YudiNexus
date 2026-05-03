@@ -23,10 +23,16 @@ let changedFiles = 0;
 
 files.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
-  if (content.includes('const data = await res.json();')) {
-    content = content.replace(/const data = await res\.json\(\);/g, 'const data: any = await res.json();');
-    fs.writeFileSync(file, content, 'utf8');
-    changedFiles++;
+  
+  // This regex matches any variable name: const myData = await myRes.json();
+  const regex = /(const|let)\s+(\w+)\s*=\s*await\s+(\w+)\.json\(\);/g;
+  
+  if (regex.test(content)) {
+    const newContent = content.replace(regex, '$1 $2: any = await $3.json();');
+    if (content !== newContent) {
+      fs.writeFileSync(file, newContent, 'utf8');
+      changedFiles++;
+    }
   }
 });
 

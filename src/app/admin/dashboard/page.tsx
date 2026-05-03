@@ -48,9 +48,9 @@ export default function AdminDashboard() {
         fetch("/api/admin/users?status=REJECTED&role=FOUNDER"),
       ]);
 
-      const pendingData = await pendingRes.json();
-      const activeData = await activeRes.json();
-      const rejectedData = await rejectedRes.json();
+      const pendingData: any = await pendingRes.json();
+      const activeData: any = await activeRes.json();
+      const rejectedData: any = await rejectedRes.json();
 
       const pending = pendingData.users || [];
       const active = activeData.users || [];

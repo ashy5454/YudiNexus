@@ -48,8 +48,8 @@ export default function FounderTeamManagement() {
         fetch("/api/admin/users?status=ACTIVE&role=EMPLOYEE"),
       ]);
 
-      const dataPending = await pendingRes.json();
-      const dataActive = await activeRes.json();
+      const dataPending: any = await pendingRes.json();
+      const dataActive: any = await activeRes.json();
 
       setPendingUsers(dataPending.users || []);
       setActiveUsers(dataActive.users || []);
